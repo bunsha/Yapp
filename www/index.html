@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <title>משלוחים</title>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link href="jqueryui/jquery-ui.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.rtl.full.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="menu" class="container-fluid">
+    <div class="list">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default default glyphicon glyphicon-time" data-st="0"></button>
+            <button type="button" class="btn btn-default default glyphicon glyphicon-flash" data-st="1"></button>
+            <button type="button" class="btn btn-default glyphicon glyphicon-ok" data-st="2"></button>
+            <button type="button" class="btn btn-default glyphicon glyphicon-remove-circle" data-st="3"></button>
+        </div>
+        <button type="button" class="btn btn-primary glyphicon glyphicon-plus  pull-right"></button>
+    </div>
+    <div class="item">
+        <button type="button" class="btn btn-success pull-left save">שמור</button>
+        <button type="button" class="btn btn-primary pull-left edit">ערוך</button>
+        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right pull-right back"></button>
+    </div>
+</div>
+
+<div id="pages">
+    <div id="list" class="container-fluid"></div>
+    <div id="item">
+        <form name="item">
+            <h3>פרטי משלוח</h3>
+            <div>
+                <h5>סטטוס</h5>
+                <h4 class="status"></h4>
+                <p>
+                    <button type="button" class="btn btn-default glyphicon glyphicon-time" data-st="0"></button>
+                    <button type="button" class="btn btn-warning glyphicon glyphicon-flash" data-st="1"></button>
+                    <button type="button" class="btn btn-default glyphicon glyphicon-ok" data-st="2"></button>
+                    <button type="button" class="btn btn-default glyphicon glyphicon-remove-circle" data-st="3"></button>
+                </p>
+                <input type="hidden" name="status">
+            </div>
+            <div>
+                <h5>חנות</h5>
+                <h4 class="vendor"></h4>
+                <p>
+                    <input type="text" name="vendor">
+                </p>
+            </div>
+            <div>
+                <h5>שעה</h5>
+                <h4 class="time"></h4>
+                <p>
+                    <select name="minute">
+                        <option>00</option>
+                        <option>15</option>
+                        <option>30</option>
+                        <option>45</option>
+                    </select>
+                    <select name="hour">
+                        <option>06</option>
+                        <option>07</option>
+                        <option>08</option>
+                        <option>09</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                    </select>
+                </p>
+            </div>
+            <div>
+                <h5>כתובת</h5>
+                <h4 class="address"></h4>
+                <p>
+                    <input type="text" name="address">
+                </p>
+            </div>
+            <div>
+                <h5>מזמין</h5>
+                <h4 class="byName"></h4>
+                <h4 class="byPhone"></h4>
+                <p>
+                    <label>שם</label>
+                    <input type="text" name="byName">
+                    <label>טלפון</label>
+                    <input type="text" name="byPhone">
+                </p>
+            </div>
+            <div>
+                <h5>מקבל</h5>
+                <h4 class="toName"></h4>
+                <h4 class="toPhone"></h4>
+                <p>
+                    <label>שם</label>
+                    <input type="text" name="toName">
+                    <label>טלפון</label>
+                    <input type="text" name="toPhone">
+                </p>
+            </div>
+            <div>
+                <h5>פרטים נוספים</h5>
+                <h4 class="details"></h4>
+                <p>
+                    <textarea name="details"></textarea>
+                </p>
+            </div>
+            <!--
+                            <div class="history">
+                                <ul>
+                                    <li>10:00 משלוח הוכנס</li>
+                                    <li>11:00 סומן כ"בתהליך"</li>
+                                    <li>12:00 סומן כ"הושלם"</li>
+                                    <li>12:15 נשלחה הודעה למזמין"</li>
+                                </ul>
+                            </div>
+            -->
+        </form>
+    </div>
+</div>
+
+<div id="toast"><span></span></div>
+<script type="text/javascript" src="cordova.js"></script>
+<script src="js/jquery.min.js"></script>
+<script src="jqueryui/jquery-ui.min.js"></script>
+<script src="js/jquery.ui.touch-punch.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/control.js"></script>
+<script src="js/db.js"></script>
+<script src="js/item.js"></script>
+<script src="js/list.js"></script>
+<script>
+    control.run();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+.ui-sortable-placeholder {
+    width: 100vw;
+    margin-right: -15px;
+}
+
+#menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ccc;
+    padding: 0;
+}
+
+#menu button,
+#menu button:focus,
+#menu button:active {
+    outline: none !important;
+    border: 0 none !important;
+    top: 0 !important;
+    border-radius: 0 !important;
+}
+#menu button i {
+    line-height: 100%;
+    vertical-align: text-top;
+    margin-left: 2px;
+}
+
+#pages {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: none;
+}
+
+#pages>div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+/* list of orders */
+
+#list>.item {
+    display: none;
+    padding: 5px 0;
+}
+
+#list>.item+.item {
+    border-top: 1px solid #ccc;
+}
+
+#list.st0>.item.st0,
+#list.st1>.item.st1,
+#list.st2>.item.st2,
+#list.st3>.item.st3 {
+    display: block;
+}
+
+#list>.item .myHandle {
+    cursor: move;
+}
+
+#list>.item .itemInfo {
+    cursor: default;
+}
+
+#list>.item .itemInfo>span {
+    display: block;
+    font-style: italic;
+}
+#list:after {
+    content: 'אין הזמנות להציג.\Aיש לשנות פילטר,\Aאו להוסיף משלוח.';
+    text-align: center;    
+    font-size: 30px;
+    color: #ccc;
+    margin-top: 30px;
+    display:none;
+    white-space: pre;
+}
+#list.blank:after {
+    display: block;
+}
+
+#item {
+    transform: translateX(-100vw);
+    transition: transform 200ms linear;
+}
+#item  h3 {
+    margin: 0;
+    padding: 20px 10px 10px 10px;
+    border-bottom: 1px solid #ccc;
+}
+#item  div {
+    padding: 0 10px;
+    border-bottom: 1px solid #ccc;
+}
+#item ul {
+    list-style-type: none;
+    padding: 10px 0;    
+}
+
+#item input {
+    width:100%;
+}
+#item input.error {
+    border:1px solid tomato;
+    background-color: rgba(255, 99, 71, 0.3);
+}
+ 
+#item p label {
+    font-weight:normal;
+    margin:0;
+}
+#item p label:last-of-type {
+    margin-top:5px;
+}
+
+#item textarea {
+    width:100%;
+    height:100px;
+}
+#item h4 span {
+    vertical-align: top;
+}
+#item select {
+    padding: 3px;
+}
+#toast {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    text-align:center;
+    height:0;
+    z-index:999;
+}
+#toast > span {
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    transform: translateY(-100%);
+    display: inline-block;
+    transition: transform 200ms;
+}
+#toast.on > span {
+    transform: translateY(80px);
+}
+
+
+
+/* container stages */
+
+body>#menu>.list,
+body.item>#menu>.item,
+body.editing #item p,
+body.editing>#menu>.item .save,
+body>#menu>.item .edit
+ {
+    display: block;
+}
+
+body #item p,
+body.item>#menu>.list,
+body>#menu>.item,
+body.editing #item h4,
+body.editing #item .history,
+body.editing>#menu>.item .edit,
+body>#menu>.item .save {
+    display: none;
+}
+
+body.item #item {
+    transform: translateX(0);
+}
