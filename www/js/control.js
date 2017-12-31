@@ -6,7 +6,7 @@ var control = (function () {
         setEvents();
         list.showOrders();
         // initial filter status
-        $('#menu > .list > div > .default').click();
+        $('#filters > div > .default').click();
     };
 
     var setEvents = function () {
@@ -16,31 +16,31 @@ var control = (function () {
             "height": "calc( 100vh - " + $('#menu').outerHeight() + "px )"
         }).show();
         // 2 - menu items
-        $('#menu > .list > div > button').on('click', function () {
+        $('#filters > div > button').on('click', function () {
             list.filter($(this).data('st'));
-            $(this).toggleClass('btn-warning').toggleClass('btn-default');
+            $(this).toggleClass('btn-warning').toggleClass('btn-basic');
             list.checkBlank();
         });
         $('#menu > .list > button').on('click', function () {
-            console.log('click add');
+            //console.log('click add');
             item.newItem();
             $('body').toggleClass('item editing');
         });
         $('#menu > .item > .edit').on('click', function () {
-            console.log('clicked top edit');
+            //console.log('clicked top edit');
             item.setEditVals();
             $('body').toggleClass('editing');
         });
         $('#menu > .item > .save').on('click', function () {
-            console.log('clicked top save');  
+            //console.log('clicked top save');  
             if(item.saveItem()) {
                 $('body').toggleClass('editing');
             }
         });
         $('#menu > .item > .back').on('click', function () {
-            console.log('clicked top back');  
+            //console.log('clicked top back');  
             if($('body').is('.editing')) {
-                console.log('creating',item.creating());
+                //console.log('creating',item.creating());
                 $('body').toggleClass('editing');
                 if(item.creating()) {
                     $('body').toggleClass('item');
@@ -76,9 +76,8 @@ var control = (function () {
 
     var deliveryTotals = function (tot) {
         //console.log(tot);
-        $('#menu > .list > div > button').each(function (i, o) {
+        $('#filters > div > button').each(function (i, o) {
             $(this).html('<i>' + tot[i] + '</i>');
-
         });
     }
 

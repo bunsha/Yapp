@@ -18,19 +18,22 @@
 
 <body>
 <div id="menu" class="container-fluid">
+    <div class="logo"></div>
     <div class="list">
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default default glyphicon glyphicon-time" data-st="0"></button>
-            <button type="button" class="btn btn-default default glyphicon glyphicon-flash" data-st="1"></button>
-            <button type="button" class="btn btn-default glyphicon glyphicon-ok" data-st="2"></button>
-            <button type="button" class="btn btn-default glyphicon glyphicon-remove-circle" data-st="3"></button>
-        </div>
-        <button type="button" class="btn btn-primary glyphicon glyphicon-plus  pull-right"></button>
+        <button type="button" class="btn btn-lg btn-primary glyphicon glyphicon-plus pull-right"></button>
     </div>
     <div class="item">
-        <button type="button" class="btn btn-success pull-left save">שמור</button>
-        <button type="button" class="btn btn-primary pull-left edit">ערוך</button>
-        <button type="button" class="btn btn-default glyphicon glyphicon-chevron-right pull-right back"></button>
+        <button type="button" class="btn btn-lg btn-success pull-left save">שמור</button>
+        <button type="button" class="btn btn-lg btn-primary pull-left edit">ערוך</button>
+        <button type="button" class="btn btn-lg btn-default glyphicon glyphicon-chevron-right pull-right back"></button>
+    </div>
+</div>
+<div id="filters" class="container-fluid">
+    <div class="btn-group btn-group-justified" role="group" style="width: 102%;">
+        <button type="button" class="btn btn-lg btn-basic default glyphicon glyphicon-time" data-st="0"></button>
+        <button type="button" class="btn btn-lg btn-basic default glyphicon glyphicon-flash" data-st="1"></button>
+        <button type="button" class="btn btn-lg btn-basic glyphicon glyphicon-ok" data-st="2"></button>
+        <button type="button" class="btn btn-lg btn-basic glyphicon glyphicon-remove-circle" data-st="3"></button>
     </div>
 </div>
 
@@ -52,9 +55,14 @@
             </div>
             <div>
                 <h5>חנות</h5>
-                <h4 class="vendor"></h4>
+                <h4 class="vendorName"></h4>
+                <h4 class="vendorPhone"></h4>
                 <p>
-                    <input type="text" name="vendor">
+                    <label>שם</label>
+                    <input list="vendorsList" name="vendorName">
+                    <datalist id="vendorsList"></datalist>
+                    <label>טלפון</label>
+                    <input type="text" name="vendorPhone">
                 </p>
             </div>
             <div>
@@ -136,12 +144,13 @@
             -->
         </form>
     </div>
+
 </div>
 
 <div id="toast"><span></span></div>
 <script type="text/javascript" src="cordova.js"></script>
 <script src="js/jquery.min.js"></script>
-<script src="jqueryui/jquery-ui.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/jquery.ui.touch-punch.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/control.js"></script>
@@ -151,6 +160,7 @@
 <script>
     control.run();
 </script>
+
 
 </body>
 </html>

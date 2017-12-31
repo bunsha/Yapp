@@ -28,7 +28,7 @@ var list = (function () {
             ${order.time}<br><span class="glyphicon glyphicon-${control.statusDisp(order.status)}"></span>
         </div>
         <div class="itemInfo col-xs-10 col-sm-10">
-            ${order.address}<span>${order.vendor}</span>
+            ${order.address}<span>${order.vendorName}</span>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@ var list = (function () {
         $ordersCtr.on('click', function (e) {
             if($(e.target).attr('id')=='list') return;
             var i = $(e.target).closest('.item').data('id');
-            console.log('clicked list item',i);            
+            //console.log('clicked list item',i);            
             item.loadItem(i);
             $('body').toggleClass('item');
         });
