@@ -1,8 +1,11 @@
 var control = (function () {
 
     var toastTime;
+    var listItemObj;
+    var backtoitem;
 
     var init = function () {
+        showPage('list');
         setEvents();
         list.showOrders();
         // initial filter status
@@ -10,54 +13,84 @@ var control = (function () {
     };
 
     var setEvents = function () {
-        // 1 - set pages offset from menu
+        // set pages offset from top bar
+        var offsettop = $('#menu').height();// + $('#logo').height();
         $('#pages').css({
-            "top": $('#menu').outerHeight() + "px",
-            "height": "calc( 100vh - " + $('#menu').outerHeight() + "px )"
+            "top": offsettop + "px",
+            "height": "calc( 100vh - " + offsettop + "px )"
         }).show();
-        // 2 - menu items
+        // list page > click add
+        $('#menu > .list > .add').on('click', function () {
+            item.newItem();
+            $('#item').scrollTop(0);
+            showPage('editing');
+        });
+        // list page > click setting
+        $('#menu > .list > .setting').on('click', function () {
+            setSettingPage();
+            showPage('setting');
+        });
+        // item edit
+        $('#menu > .item > .edit').on('click', function () {
+            $('#item').scrollTop(0);
+            item.setEditVals();
+            showPage('editing', true);
+        });
+        // item save
+        $('#menu > .item > .save').on('click', function () {
+            $('#item').scrollTop(0);
+            if (item.saveItem()) {
+                showPage('item');
+            }
+        });
+        // item back
+        $('#menu > .item > .back').on('click', function () {
+            showPage(backtoitem ? 'item' : 'list');
+        });
+        // sms back 
+        $('#menu > .sms > .back').on('click', function () {
+            showPage('item');
+        });
+        // sms send 
+        $('#menu > .sms > .send').on('click', function () {
+            sms.send();
+        }); 
+        // setting back
+        $('#menu > .setting > .back').on('click', function () {
+            showPage('list');
+        });
+        // bottom filter
         $('#filters > div > button').on('click', function () {
             list.filter($(this).data('st'));
             $(this).toggleClass('btn-warning').toggleClass('btn-basic');
             list.checkBlank();
         });
-        $('#menu > .list > button').on('click', function () {
-            //console.log('click add');
-            item.newItem();
-            $('body').toggleClass('item editing');
-        });
-        $('#menu > .item > .edit').on('click', function () {
-            //console.log('clicked top edit');
-            item.setEditVals();
-            $('body').toggleClass('editing');
-        });
-        $('#menu > .item > .save').on('click', function () {
-            //console.log('clicked top save');  
-            if(item.saveItem()) {
-                $('body').toggleClass('editing');
-            }
-        });
-        $('#menu > .item > .back').on('click', function () {
-            //console.log('clicked top back');  
-            if($('body').is('.editing')) {
-                //console.log('creating',item.creating());
-                $('body').toggleClass('editing');
-                if(item.creating()) {
-                    $('body').toggleClass('item');
-                    list.checkBlank();
-                }
-            }
-            else {
-                $('body').toggleClass('item');
-                list.checkBlank();
-            }
-        });
         // toast
-        $('#toast > span').on('click',function() {
+        $('#toast > span').on('click', function () {
             clearTimeout(toastTime);
-            $('#toast').removeClass('on');
+            $('#toast').removeClass('on persist');
         });
     };
+
+    var showPage = function (page, isbacktoitem) {
+        backtoitem = isbacktoitem ? true : false;
+        switch (page) {
+            case 'list':
+                list.checkBlank();
+            case 'sms':
+            case 'setting':
+            case 'item':
+                $('body').attr('class', page);
+                curpage = page;
+                break;
+            case 'editing':
+                $('body').attr('class', 'item editing');
+                curpage = page;
+                break;
+            default:
+                alert('error unknow page ' + page)
+        }
+    }
 
     var statusDisp = function (s, full) {
         switch (s) {
@@ -75,25 +108,86 @@ var control = (function () {
     }
 
     var deliveryTotals = function (tot) {
-        //console.log(tot);
         $('#filters > div > button').each(function (i, o) {
             $(this).html('<i>' + tot[i] + '</i>');
         });
     }
 
-    var toast = function(text) {
+    var toast = function (text,closeBtn) {
+        clearTimeout(toastTime);
+        if(closeBtn===true) {
+            $('#toast').addClass('persist');
+            text += '<br><span>סגור</span>';
+        }
+        else {
+            toastTime = setTimeout(function () {
+                $('#toast').removeClass('on');
+            }, 2500);
+        }
         $('#toast span').html(text);
         $('#toast').addClass('on');
-        toastTime = setTimeout( function() {
-            $('#toast').removeClass('on');
-        },2500);
     }
+
+    var setSettingPage = function () {
+        var vendors = db.getVendors();
+        var msgs = db.getMsgs();
+        var $v = $('#setting .vendors');
+        var $m = $('#setting .msgs');
+        var totvendors = vendors.length;
+        var totmsgs = msgs.length;
+        var i;
+        $v.empty();
+        if (!totvendors) {
+            $v.append('<li>אין חנויות שמורות</li>');
+        } else {
+            for (i = 0; i < totvendors; i++) {
+                $v.append('<li><button type="button" class="btn btn-sm btn-danger glyphicon glyphicon-trash pull-right""></button>' + vendors[i].name + '<br>' + vendors[i].phone + '</li>');
+            }
+            $('button', $v).on('click', function () {
+                db.removeVendor($(this).parent().index());
+                $(this).parent().remove();
+                if (--totvendors == 0) {
+                    $v.append('<li>אין חנויות שמורות</li>');
+                }
+            });
+        }
+        $m.empty();
+        if (!totmsgs) {
+            $m.append('<li>אין הודעות שמורות</li>');
+        } else {
+            for (i = 0; i < totmsgs; i++) {
+                $m.append('<li><button type="button" class="btn btn-sm btn-danger glyphicon glyphicon-trash pull-right""></button>' + msgs[i] + '</li>');
+            }
+            $('button', $m).on('click', function () {
+                db.removeMsg($(this).parent().index());
+                $(this).parent().remove();
+                if (--totmsgs == 0) {
+                    $m.append('<li>אין הודעות שמורות</li>');
+                }
+            });
+        }
+    }
+
+    /* TBD - consider blinking last edited / added item when getting back to list */
+
+    var blink = function () {
+        var o = $('[data-id="1514552997888"]');
+        o.addClass('flash');
+        setTimeout(function () {
+            o.addClass('noflash');
+            setTimeout(function () {
+                o.removeClass('flash noflash');
+            }, 1000);
+        }, 100);
+    };
+
 
     return { // interface
         deliveryTotals: deliveryTotals,
         statusDisp: statusDisp,
         run: init,
-        toast: toast
+        toast: toast,
+        page: showPage
     };
 
 })();

@@ -11,14 +11,12 @@ var list = (function () {
             $ordersCtr.empty();
         }
         var data = db.orders();
-        //console.log(data);
         var tots = new Array(4).fill(0),
             i,order,id;
         for (i=0;i<data.sequence.length;i++) {
             id = data.sequence[i];
             order = data.orders[id];
             tots[order.status]++;
-            //console.log(id,order);
             $ordersCtr.append(
                 `
 <div class="row item st${order.status}" data-id="${id}">
@@ -61,10 +59,8 @@ var list = (function () {
     var filterClicked = function (statusId) {
         var st = 'st' + statusId;
         if ($ordersCtr.is('.' + st)) {
-            //console.log('hide status ', st);
             $ordersCtr.removeClass(st);
         } else {
-            //console.log('show status ', st);
             $ordersCtr.addClass(st);
         }        
     }
@@ -72,10 +68,9 @@ var list = (function () {
     var setClickable = function () {
         $ordersCtr.on('click', function (e) {
             if($(e.target).attr('id')=='list') return;
-            var i = $(e.target).closest('.item').data('id');
-            //console.log('clicked list item',i);            
+            var i = $(e.target).closest('.item').data('id');           
             item.loadItem(i);
-            $('body').toggleClass('item');
+            control.page('item');
         });
     }
 

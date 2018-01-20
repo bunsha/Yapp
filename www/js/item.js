@@ -3,12 +3,10 @@ var item = (function () {
     var focusId = null;
     var order = null;
     var params = document.forms[0].elements;
-    var vendors;
+    var vendors = {};
 
     var init = function () {
         setEvents();
-        setVendors();
-
     }
 
     var setEvents = function () {
@@ -36,10 +34,12 @@ var item = (function () {
     }
 
     var setVendors = function () {
-        vendors = db.getVendors();
+        var vs = db.getVendors();
+        vendors = {};
         $('#vendorsList').empty();
-        for (var i in vendors) {
-            $('#vendorsList').append('<option value="' + i + '">');
+        for (var i in vs) {
+            vendors[vs[i].name] = vs[i].phone;
+            $('#vendorsList').append('<option value="' + vs[i].name + '">');
         }
     }
 
@@ -48,6 +48,20 @@ var item = (function () {
         order = db.getItem(index);
         // status
         $('#item .status').html(control.statusDisp(order.status, true));
+        // sms button        
+        if (order.status == 2) {
+            var validphone = new RegExp("^05[0-9]{8}$");
+            var validByphone = validphone.test(order.byPhone) ? order.byPhone : null;
+            var validVendorPhone = validphone.test(order.vendorPhone) ? order.vendorPhone : null;
+            if (validByphone || validVendorPhone) {
+                $('<button type="button" class="btn btn-primary pull-right glyphicon glyphicon-phone"></button>')
+                    .on('click', function () {
+                        sms.open(validVendorPhone, validByphone);
+                        control.page('sms');
+                    })
+                    .appendTo('#item .status');
+            }
+        }
         // vendor
         $('#item .vendorName').html(order.vendorName);
         $('#item .vendorPhone').html('<a href="tel:' + order.vendorPhone + '">' + order.vendorPhone + '</a>');
@@ -56,16 +70,40 @@ var item = (function () {
         // address   
         $('#item .address').html('<a href="https://waze.com/ul?q=' + encodeURIComponent(order.address) + '">' + order.address + '</a>');
         // by
-        $('#item .byName').html(order.byName);
-        $('#item .byPhone').html('<a href="tel:' + order.byPhone + '">' + order.byPhone + '</a>');
+        if (order.byName == '' && order.byPhone == '') {
+            $('#item .byName').html('אין פרטים');
+        } else {
+            $('#item .byName').html(order.byName);
+            $('#item .byPhone').html('<a href="tel:' + order.byPhone + '">' + order.byPhone + '</a>');
+        }
         // to
-        $('#item .toName').html(order.toName);
-        $('#item .toPhone').html('<a href="tel:' + order.toPhone + '">' + order.toPhone + '</a>');
-        // details        
-        $('#item .details').html(order.details.replace(/\n/g, '<br>'));
+        if (order.toName == '' && order.toPhone == '') {
+            $('#item .toName').html('אין פרטים');
+        } else {
+            $('#item .toName').html(order.toName);
+            $('#item .toPhone').html('<a href="tel:' + order.toPhone + '">' + order.toPhone + '</a>');
+        }
+        // details
+        if (order.details != '') {
+            $('#item .details').html(order.details.replace(/\n/g, '<br>'));
+        } else {
+            $('#item .details').html('אין');
+        }
+        // history
+        if (order.history && order.history.length > 0) {
+            var buff = '';
+            for (var i = 0; i < order.history.length; i++) {
+                buff += '<li><i>' + order.history[i].time + '</i> ' + order.history[i].text + '</li>';
+            }
+            $('#item .history ul').html(buff);
+            $('#item .history').show();
+        } else {
+            $('#item .history').hide();
+        }
     }
 
     var setEditVals = function () {
+        setVendors();
         $(params).removeClass('error');
         var t;
         // status        
@@ -89,6 +127,7 @@ var item = (function () {
         params.toPhone.value = order.toPhone;
         // details        
         params.details.value = order.details;
+        $('#item .history').hide();
     }
 
     var saveItem = function () {
@@ -103,7 +142,8 @@ var item = (function () {
             byPhone: params.byPhone.value.trim(),
             toName: params.toName.value.trim(),
             toPhone: params.toPhone.value.trim(),
-            details: params.details.value
+            details: params.details.value,
+            history: order.history ? order.history : []
         }
         var e = false;
         if (o.vendorName == '') {
@@ -114,28 +154,45 @@ var item = (function () {
             e = true;
             $(params.address).addClass('error');
         }
-        if (o.byPhone == '') {
-            e = true;
-            $(params.byPhone).addClass('error');
-        }
-        if (o.toPhone == '') {
-            e = true;
-            $(params.toPhone).addClass('error');
-        }
+        // if (o.byPhone == '') {
+        //     e = true;
+        //     $(params.byPhone).addClass('error');
+        // }
+        // if (o.toPhone == '') {
+        //     e = true;
+        //     $(params.toPhone).addClass('error');
+        // }
         if (e) {
-            control.toast('נא להשלים את כל הפרטים');
+            control.toast('נא להשלים את כל הפרטים',true);
         } else {
             control.toast('פרטים נשמרו');
             if (focusId === null) {
                 focusId = +new Date();
+                o.history.push({
+                    time: historyTime(),
+                    text: control.statusDisp(o.status, true)
+                });
+            } else if (order.status != o.status) {
+                o.history.push({
+                    time: historyTime(),
+                    text: control.statusDisp(o.status, true)
+                });
             }
             db.saveItem(focusId, o);
-            db.addVendor(o.vendorName, o.vendorPhone);
+            db.addVendor(o.vendorName, o.vendorPhone, undefined === vendors[o.vendorName]);
             loadItem(focusId);
             setVendors();
             list.reloadList();
         }
         return !e;
+    }
+
+    var historySmsAdd = function (recipients) {
+        order.history.push({
+            time: historyTime(),
+            text: 'SMS נשלח ל' + recipients.join(' + ')
+        });
+        loadItem(focusId);
     }
 
     var newItem = function () {
@@ -163,8 +220,15 @@ var item = (function () {
         setEditVals();
     }
 
-    var creating = function () {
-        return focusId === null;
+    var historyTime = function () {
+        var dt = new Date();
+        var day = dt.getDate(),
+            mnth = dt.getMonth() + 1,
+            hr = dt.getHours(),
+            mn = dt.getMinutes();
+        if (hr < 10) hr = '0' + hr;
+        if (mn < 10) mn = '0' + mn;
+        return hr + ':' + mn + ' ' + day + '/' + mnth;
     }
 
     init();
@@ -174,7 +238,7 @@ var item = (function () {
         saveItem: saveItem,
         setEditVals: setEditVals,
         newItem: newItem,
-        creating: creating
+        historySmsAdd: historySmsAdd
     };
 
 })();

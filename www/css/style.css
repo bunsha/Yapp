@@ -1,21 +1,40 @@
+@font-face {
+    font-family: hebfont;
+    src: url(../fonts/Assistant-Regular.ttf);
+}
+
+body {
+    font-family: hebfont, Tahoma, arial;
+    font-size: 16px;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+h5 {
+    font-size: 16px;
+}
+
 .ui-sortable-placeholder {
     width: 100vw;
     margin-right: -15px;
 }
 
-#menu >.logo {
+#logo {
     background: #f15c22 url(../img/logo.png) no-repeat center center;
     background-size: contain;
-    height:25px;
+    height: 25px;
 }
 
 #menu {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;    
-    padding: 0;   
-    background-color:#ddd; 
+    width: 100%;
+    padding: 0;
+    background: #f15c22 url(../img/icon.png) no-repeat center center;
+    background-size: auto 70%;
 }
 
 #menu button,
@@ -29,9 +48,20 @@
     top: 0 !important;
     border-radius: 0 !important;
 }
-#filters button {
-    width:25%;
+
+#menu button {
+    color:#fff;
+    background-color:transparent;
 }
+#menu .btn-lg {
+    font-size: 23px;
+    padding:5px 11px;
+}
+
+#filters button {
+    width: 25%;
+}
+
 #filters button i {
     line-height: 100%;
     vertical-align: text-top;
@@ -39,12 +69,12 @@
 }
 
 #filters {
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    z-index:999;
-    padding:0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    padding: 0;
 }
 
 #pages {
@@ -68,6 +98,7 @@
     background-color: #fff;
     padding-bottom: 25vh;
 }
+
 
 /* list of orders */
 
@@ -99,76 +130,105 @@
     display: block;
     font-style: italic;
 }
+
 #list:after {
     content: 'אין הזמנות להציג.\Aיש לשנות פילטר,\Aאו להוסיף משלוח.';
-    text-align: center;    
+    text-align: center;
     font-size: 30px;
     color: #ccc;
     margin-top: 30px;
-    display:none;
+    display: none;
     white-space: pre;
 }
+
 #list.blank:after {
     display: block;
 }
 
-#item {
+#item,
+#sms,
+#setting {
     transform: translateX(-100vw);
     transition: transform 200ms linear;
 }
+
 #item a {
-    color:#333 !important;
+    color: #333 !important;
 }
-#item  h3 {
+
+#item h3,
+#sms h3,
+#setting h3 {
     margin: 0;
     padding: 20px 10px 10px 10px;
     border-bottom: 1px solid #ccc;
 }
-#item  div {
+
+#item div,
+#sms>div {
     padding: 0 10px;
     border-bottom: 1px solid #ccc;
 }
+
 #item ul {
     list-style-type: none;
-    padding: 10px 0;    
+    padding: 0;
 }
 
 #item input {
-    width:100%;
+    width: 100%;
 }
+
 #item input.error {
-    border:1px solid tomato;
+    border: 1px solid tomato;
     background-color: rgba(255, 99, 71, 0.3);
 }
- 
+
 #item p label {
-    font-weight:normal;
-    margin:0;
+    font-weight: normal;
+    margin: 0;
 }
+
 #item p label:last-of-type {
-    margin-top:5px;
+    margin-top: 5px;
 }
 
 #item textarea {
-    width:100%;
-    height:100px;
+    width: 100%;
+    height: 100px;
 }
+
 #item h4 span {
     vertical-align: top;
 }
+
+#item h4 button {
+    margin: -0.85em 0 0 0;
+    font-size: 2em;
+    background-color: #f15c22;
+    padding: 2px 9px;
+    border: 0 none;
+}
+
 #item select {
     padding: 3px;
 }
+
 #toast {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    text-align:center;
-    height:0;
-    z-index:999;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    height: 0;
+    z-index: 999;
 }
-#toast > span {
+#toast.persist {
+    height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#toast>span {
     padding: 10px;
     background-color: #000;
     color: #fff;
@@ -176,35 +236,107 @@
     transform: translateY(-100%);
     display: inline-block;
     transition: transform 200ms;
+    max-width: 70%;
 }
-#toast.on > span {
+#toast>span>span {
+    display: inline-block;
+    margin-top: 20px;
+    border: 1px solid #fff;
+    padding: 2px 10px;
+    border-radius: 5px;
+}
+
+#toast.on>span {
     transform: translateY(80px);
 }
 
+#sms .recipient>label {
+    font-weight: normal;
+    font-size: 20px;
+    display: block;
+}
 
+#sms .recipient>label>input {
+    margin-left: 6px;
+}
+
+#sms .msgoptions {
+    list-style-type: none;
+    padding: 0;
+}
+
+#sms .msgoptions>li {}
+
+#sms .msgoptions>li>label {
+    vertical-align: top;
+    padding: 0 10px 20px 10px;
+}
+
+#sms .msgoptions>li>label>input {}
+
+#sms .msgoptions>li>textarea {
+    font-size: 18px;
+    line-height: 20px;
+    height: 45px;
+    width: 100%;
+    resize: none;
+    outline: none;
+}
+
+#sms .msgoptions>li>textarea.thisone {
+    background-color: #ccc;
+    border: 1px solid #777;
+}
+
+#setting ul {
+    list-style-type: none;
+    padding: 0;
+}
+#setting ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    min-height: 50px;
+}
 
 /* container stages */
 
-body>#menu>.list,
-body.item>#menu>.item,
-body.editing #item p,
-body.editing>#menu>.item .save,
-body>#menu>.item .edit,
-body>#filters
- {
-    display: block;
-}
-body.item>#filters,
-body #item p,
-body.item>#menu>.list,
-body>#menu>.item,
-body.editing #item h4,
-body.editing #item .history,
-body.editing>#menu>.item .edit,
-body>#menu>.item .save {
-    display: none;
+#menu > div,
+#filters,
+#item p,
+#item h4,
+#menu .item .save,
+#menu .item .edit {
+    display:none;
 }
 
-body.item #item {
+body.list > #menu> .list,
+body.setting > #menu > .setting,
+body.sms > #menu > .sms,
+body.item > #menu > .item,
+body.list > #filters,
+body.item:not(.editing) #item h4,
+body.sms #item h4,
+body.item.editing #item p,
+body.item:not(.editing) #menu .item .edit,
+body.item.editing #menu .item .save {
+    display: block;
+}
+
+body.item #item,
+body.sms #item,
+body.sms #sms,
+body.setting #setting {
     transform: translateX(0);
+}
+
+
+/* tbd */
+
+.flash {
+    background-color: yellow;
+}
+
+.noflash {
+    transition: background-color 800ms;
+    background-color: #fff;
 }

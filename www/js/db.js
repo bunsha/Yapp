@@ -3,14 +3,28 @@ var db = (function () {
     var orders;
     var sequence;
     var vendors;
+    var msgs;
 
     var init = function () {
         var ordersTxt = localStorage.getItem('ordersList');
         var sequenceTxt = localStorage.getItem('ordersSequence');
-        var vendorsTxt = localStorage.getItem('vendorsList');
         orders = ordersTxt ? JSON.parse(ordersTxt) : {};
         sequence = sequenceTxt ? JSON.parse(sequenceTxt) : [];
-        vendors = vendorsTxt ? JSON.parse(vendorsTxt) : [];
+        var curtime = +new Date();
+        var changed = false;
+        for (var i = 0; i < sequence.length; i++) {
+            if (((curtime - sequence[i]) / 1000 / 60 / 60) > 22) {
+                changed = true;
+                sequence.splice(i, 1);
+                delete orders[sequence[i]];
+            }
+        }
+        setMsgs();
+        setVendors();
+        if (changed) {
+            localStorage.setItem('ordersSequence', JSON.stringify(sequence));
+            localStorage.setItem('ordersList', JSON.stringify(orders));
+        }
     };
 
     var getOrders = function () {
@@ -30,7 +44,6 @@ var db = (function () {
             reorder(sequence);
         }
         orders[index] = data;
-        //console.log(orders);
         localStorage.setItem('ordersList', JSON.stringify(orders));
     }
 
@@ -39,19 +52,63 @@ var db = (function () {
         localStorage.setItem('ordersSequence', JSON.stringify(sequence));
     }
 
-    var getVendors = function() {
+    var setVendors = function () {
+        var vendorsTxt = localStorage.getItem('vendorsList');
+        vendors = vendorsTxt ? JSON.parse(vendorsTxt) : [];
+    }
+
+    var getVendors = function () {
         return vendors;
     }
-    var addVendor = function(name,phone) {
-        vendors[name] = phone;
+    var addVendor = function (name, phone, isNew) {
+        if (isNew) {
+            vendors.push({
+                name: name,
+                phone: phone
+            });
+        } else {
+            var done = false;
+            for (var i = 0; i < vendors.length && !done; i++) {
+                if (vendors[i].name == name) {
+                    vendors[i].phone = phone;
+                    done = false;
+                }
+            }
+        }
         localStorage.setItem('vendorsList', JSON.stringify(vendors));
     }
 
+    var removeVendor = function (index) {
+        vendors.splice(index, 1);
+        localStorage.setItem('vendorsList', JSON.stringify(vendors));
+        setVendors();
+    }
+
+    var setMsgs = function () {
+        var msgsTxt = localStorage.getItem('smsList');
+        msgs = msgsTxt ? JSON.parse(msgsTxt) : [];
+    }
+
+    var getMsgs = function () {
+        return msgs;
+
+    }
+    var saveMsg = function (text) {
+        msgs.push(text);
+        localStorage.setItem('smsList', JSON.stringify(msgs));
+    }
+
+    var removeMsg = function (index) {
+        msgs.splice(index, 1);
+        localStorage.setItem('smsList', JSON.stringify(msgs));
+        setMsgs();
+    }
+
     var initDebug = function () {
-        var i,vendorsTemp = {};
+        var i, vendorsTemp = {};
         orders = debugOrders();
         sequence = [];
-        vendors = {};        
+        vendors = {};
         for (i in orders) {
             sequence.push(i);
             vendors[orders[i].vendorName] = orders[i].vendorPhone;
@@ -136,7 +193,7 @@ var db = (function () {
                 details: "ףךל  ילח כ טא  רק יבי בי  חל מח ך חפ םןפ  ן י יו ון י ןוי\nלכגחילחי לחגכ ילחגכ ישדלגכ"
             },
             7: {
-                status: 1,                
+                status: 1,
                 vendorName: "מתנות",
                 vendorPhone: "092-1232345",
                 time: "13:00",
@@ -220,7 +277,11 @@ var db = (function () {
         getItem: getItem,
         saveItem: saveItem,
         getVendors: getVendors,
-        addVendor: addVendor
+        addVendor: addVendor,
+        getMsgs: getMsgs,
+        saveMsg: saveMsg,
+        removeVendor: removeVendor,
+        removeMsg: removeMsg
     };
 
 })();

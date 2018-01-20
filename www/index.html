@@ -18,14 +18,21 @@
 
 <body>
 <div id="menu" class="container-fluid">
-    <div class="logo"></div>
     <div class="list">
-        <button type="button" class="btn btn-lg btn-primary glyphicon glyphicon-plus pull-right"></button>
+        <button type="button" class="btn btn-lg btn-primary glyphicon glyphicon-plus pull-left add"></button>
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-menu-hamburger pull-right setting"></button>
     </div>
     <div class="item">
-        <button type="button" class="btn btn-lg btn-success pull-left save">שמור</button>
-        <button type="button" class="btn btn-lg btn-primary pull-left edit">ערוך</button>
-        <button type="button" class="btn btn-lg btn-default glyphicon glyphicon-chevron-right pull-right back"></button>
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-save pull-left save"></button>
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-pencil pull-left edit"></button>
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-chevron-right pull-right back"></button>
+    </div>
+    <div class="sms">
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-phone pull-left send"></button>
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-chevron-right pull-right back"></button>
+    </div>
+    <div class="setting">
+        <button type="button" class="btn btn-lg btn-default-outline glyphicon glyphicon-chevron-right pull-right back"></button>
     </div>
 </div>
 <div id="filters" class="container-fluid">
@@ -62,7 +69,7 @@
                     <input list="vendorsList" name="vendorName">
                     <datalist id="vendorsList"></datalist>
                     <label>טלפון</label>
-                    <input type="text" name="vendorPhone">
+                    <input type="number" name="vendorPhone">
                 </p>
             </div>
             <div>
@@ -111,7 +118,7 @@
                     <label>שם</label>
                     <input type="text" name="byName">
                     <label>טלפון</label>
-                    <input type="text" name="byPhone">
+                    <input type="number" name="byPhone">
                 </p>
             </div>
             <div>
@@ -122,32 +129,50 @@
                     <label>שם</label>
                     <input type="text" name="toName">
                     <label>טלפון</label>
-                    <input type="text" name="toPhone">
+                    <input type="number" name="toPhone">
                 </p>
             </div>
-            <div>
+            <div class="detailsCtr">
                 <h5>פרטים נוספים</h5>
                 <h4 class="details"></h4>
                 <p>
                     <textarea name="details"></textarea>
                 </p>
             </div>
-            <!--
-                            <div class="history">
-                                <ul>
-                                    <li>10:00 משלוח הוכנס</li>
-                                    <li>11:00 סומן כ"בתהליך"</li>
-                                    <li>12:00 סומן כ"הושלם"</li>
-                                    <li>12:15 נשלחה הודעה למזמין"</li>
-                                </ul>
-                            </div>
-            -->
+            <div class="history">
+                <h5>מעקב התקדמות:</h5>
+                <ul></ul>
+            </div>
         </form>
     </div>
+    <div id="sms">
+        <h3>אישור משלוח ב SMS</h3>
+        <div>
+            <h5>שלח ל:</h5>
+            <p class="recipient">
+                <label class="tovendor">
+                    <input type="checkbox" value="vendor" data-type="חנות">חנות</label>
+                <label class="toby">
+                    <input type="checkbox" value="by" data-type="מזמין">מזמין</label>
+            </p>
+        </div>
+        <div>
+            <h5>הודעה:</h5>
+            <ul class="msgoptions"></ul>
+        </div>
+    </div>
+    <div id="setting">
+        <h3>חנויות</h3>
+        <ul class='vendors'></ul>
+        <h3>הודעות</h3>
+        <ul class='msgs'></ul>
 
+    </div>
 </div>
 
-<div id="toast"><span></span></div>
+<div id="toast">
+    <span></span>
+</div>
 <script type="text/javascript" src="cordova.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
@@ -155,6 +180,7 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/control.js"></script>
 <script src="js/db.js"></script>
+<script src="js/sms.js"></script>
 <script src="js/item.js"></script>
 <script src="js/list.js"></script>
 <script>
